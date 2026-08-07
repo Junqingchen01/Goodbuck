@@ -1,0 +1,13 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    index.js
+
+deploy:
+  stage: deploy
+  script:
+    index.js
