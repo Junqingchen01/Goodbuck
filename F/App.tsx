@@ -7,33 +7,33 @@ import { Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // marin screens
-import DashboardScreens from './src/screens/DashboardScreens';
-import ChatScreens from './src/screens/ChatScreens';
-import DespesasScreen from './src/screens/DespesasScreens';
-import DicaScreens from './src/screens/DicaScreens';
-import SettingScreens from './src/screens/SettingScreens';
-import LoginScreen from './src/screens/LoginScreen';
-import RegisterScreen  from './src/screens/RegisterScreen ';
-import MetasScreens  from './src/screens/MetasScreens';
-import EditarMeta  from './src/screens/EditarMeta';
-import FavoritoScreens  from './src/screens/FavoritoScreens';
-import NotificationScreens  from './src/screens/NotificationScreens';
+import DashboardScreens from './F/src/screens/DashboardScreens';
+import ChatScreens from './F/src/screens/ChatScreens';
+import DespesasScreen from './F/src/screens/DespesasScreens';
+import DicaScreens from './F/src/screens/DicaScreens';
+import SettingScreens from './F/src/screens/SettingScreens';
+import LoginScreen from './F/src/screens/LoginScreen';
+import RegisterScreen  from './F/src/screens/RegisterScreen ';
+import MetasScreens  from './F/src/screens/MetasScreens';
+import EditarMeta  from './F/src/screens/EditarMeta';
+import FavoritoScreens  from './F/src/screens/FavoritoScreens';
+import NotificationScreens  from './F/src/screens/NotificationScreens';
 
 // add screens
-import AddDespesa from './src/screens/AddDespesa';
-import AddMeta from './src/screens/AddMeta';
+import AddDespesa from './F/src/screens/AddDespesa';
+import AddMeta from './F/src/screens/AddMeta';
 
 // perfil screens
-import Perfil from './src/screens/Perfil';
-import Definicoes from './src/screens/Definicoes';
-import EditarPerfil from './src/screens/EditarPerfil';
+import Perfil from './F/src/screens/Perfil';
+import Definicoes from './F/src/screens/Definicoes';
+import EditarPerfil from './F/src/screens/EditarPerfil';
 
 // componentes screens
-import dica from './src/components/dica';
-import metainfo from './src/components/meta';
-import despesainfo from './src/components/despesa';
-import premium from './src/components/premium';
-import LoadingAnimation from './src/LoadingAnimation';
+import dica from './F/src/components/dica';
+import metainfo from './F/src/components/meta';
+import despesainfo from './F/src/components/despesa';
+import premium from './F/src/components/premium';
+import LoadingAnimation from './F/src/LoadingAnimation';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
