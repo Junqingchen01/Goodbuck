@@ -170,6 +170,12 @@ const authenticateToken = require('../utilities/utilities');
  */
 
 router.post('/login', perfilController.login);
+/********************************************************************************
+ * [新增/修改功能]: 注册登出与 Token 黑名单作废路由 (Logout Route Registration)
+ * [修改原因]: 允许客户端主动作废当前 JWT Token 并将信息记录进 Redis 黑名单
+ ********************************************************************************/
+router.post('/logout', authenticateToken.validateToken, perfilController.logout);
+/********************************************************************************/
 router.get('/',perfilController.getAllUsers);
 router.get('/user',authenticateToken.validateToken, perfilController.getUserById);
 router.post('/register', perfilController.register);
@@ -181,3 +187,4 @@ router.post('/Premium',authenticateToken.validateToken, perfilController.BuyPrem
 router.get('/Premium',authenticateToken.validateToken, perfilController.getInfoPremium);  
 
 module.exports = router;
+

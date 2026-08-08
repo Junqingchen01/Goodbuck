@@ -17,11 +17,16 @@ exports.login = async (req, res) => {
       const isPasswordMatch = await bcrypt.compare(Password, user.Password);
 
       if (isPasswordMatch) {
+/********************************************************************************
+ * [新增/修改功能]: 登录凭证 JWT Secret 环境变量读取 (JWT Secret Env Reading)
+ * [修改原因]: 替代硬编码字符串 "secret-key"，读取 .env 安全配置
+ ********************************************************************************/
         const token = jwt.sign(
           { UserID: user.UserID, Name: user.Name, UserType: user.UserType },
-          "secret-key",
+          process.env.JWT_SECRET || "secret-key",
           { expiresIn: "1h" } 
         );
+/********************************************************************************/
 
         res.status(200).json({ token });
       } else {
@@ -247,3 +252,28 @@ exports.getInfoPremium = async (req, res) => {
   }
 
 }
+
+/********************************************************************************
+ * [新增/修改功能]: 用户主动登出与 Token 黑名单作废 (Logout & Token Revocation)
+ * [修改原因]: 结合 Redis 实现无状态 JWT 的主动废弃与安全退出功能，防范 Token 泄露风险
+ ********************************************************************************/
+const { setCache } = require('../connections/redis');
+
+exports.logout = async (req, res) => {
+  try {
+    const authorizationHeader = req.header("Authorization");
+    if (authorizationHeader) {
+      const [bearer, token] = authorizationHeader.split(" ");
+      if (bearer === "Bearer" && token) {
+        // 将 Token 写入 Redis 黑名单，有效时长设为 3600 秒（对应 JWT 剩余生存期）
+        await setCache(`token:blacklist:${token}`, true, 3600);
+      }
+    }
+    res.status(200).json({ message: "Logout successful and token revoked." });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Internal Server Error during logout" });
+  }
+};
+/********************************************************************************/
+

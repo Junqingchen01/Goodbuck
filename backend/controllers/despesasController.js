@@ -3,6 +3,19 @@ const { User } = require("../models/user");
 const { Despesa } = require("../models/despesa");
 const { Sequelize } = require('sequelize');
 
+/********************************************************************************
+ * [新增/修改功能]: 旁路缓存失效机制 (Cache Aside Pattern - Cache Invalidation)
+ * [修改原因]: 当用户新增或删除账单消费记录时，主动删除该用户的 Redis 大盘缓存，确保下一次查询获取最新真实数据
+ ********************************************************************************/
+const { delCache } = require("../connections/redis");
+
+const clearUserDashboardCache = async (userID) => {
+    await delCache(`dashboard:category:${userID}`);
+    await delCache(`dashboard:total:${userID}`);
+    await delCache(`dashboard:month:${userID}`);
+};
+/********************************************************************************/
+
 //get all despesas
 exports.GetUserDespesas = async (req, res) => {
     try {
@@ -55,6 +68,13 @@ exports.createDespesa = async (req, res) => {
             PaymentMethod,
             Amount
         });
+
+/********************************************************************************
+ * [新增/修改功能]: 创建账单后清除该用户的 Redis 缓存
+ * [修改原因]: 数据发生变动，保证缓存数据不一致性被立即清除
+ ********************************************************************************/
+        await clearUserDashboardCache(UserID);
+/********************************************************************************/
 
         res.status(201).json({
             message: "Despesa created successfully",
@@ -114,6 +134,13 @@ exports.deleteDespesaById = async (req, res) => {
 
         await despesa.destroy();
 
+/********************************************************************************
+ * [新增/修改功能]: 删除账单后清除该用户的 Redis 缓存
+ * [修改原因]: 数据发生变动，保证缓存数据不一致性被立即清除
+ ********************************************************************************/
+        await clearUserDashboardCache(UserID);
+/********************************************************************************/
+
         res.status(200).json({
             message: "Despesa deleted successfully",
         });
@@ -122,4 +149,5 @@ exports.deleteDespesaById = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
 
